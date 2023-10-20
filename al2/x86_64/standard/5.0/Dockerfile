@@ -86,16 +86,16 @@ RUN set -ex \
     && yum install -y -q https://s3.amazonaws.com/amazon-ssm-us-east-1/latest/linux_amd64/amazon-ssm-agent.rpm
 
 # Install env tools for runtimes
-## Dotnet
-ENV PATH="/root/.dotnet/:/root/.dotnet/tools/:$PATH"
-RUN set -ex  \
-&& wget -qO /usr/local/bin/dotnet-install.sh https://dot.net/v1/dotnet-install.sh \
-&& chmod +x /usr/local/bin/dotnet-install.sh
+# ## Dotnet
+# ENV PATH="/root/.dotnet/:/root/.dotnet/tools/:$PATH"
+# RUN set -ex  \
+# && wget -qO /usr/local/bin/dotnet-install.sh https://dot.net/v1/dotnet-install.sh \
+# && chmod +x /usr/local/bin/dotnet-install.sh
 
-##nodejs
-ENV N_SRC_DIR="$SRC_DIR/n"
-RUN git clone https://github.com/tj/n $N_SRC_DIR \
-     && cd $N_SRC_DIR && make install
+# ##nodejs
+# ENV N_SRC_DIR="$SRC_DIR/n"
+# RUN git clone https://github.com/tj/n $N_SRC_DIR \
+#      && cd $N_SRC_DIR && make install
 
 ##ruby
 ENV RBENV_SRC_DIR="/usr/local/rbenv"
@@ -109,19 +109,19 @@ RUN set -ex \
     && git clone https://github.com/rbenv/ruby-build.git $RUBY_BUILD_SRC_DIR \
     && sh $RUBY_BUILD_SRC_DIR/install.sh
 
-##python
-RUN curl https://pyenv.run | bash
-ENV PATH="/root/.pyenv/shims:/root/.pyenv/bin:$PATH"
+# ##python
+# RUN curl https://pyenv.run | bash
+# ENV PATH="/root/.pyenv/shims:/root/.pyenv/bin:$PATH"
 
-##php
-RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
-ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
+# ##php
+# RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
+# ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 
-##go
-RUN git clone https://github.com/syndbg/goenv.git $HOME/.goenv
-ENV PATH="/root/.goenv/shims:/root/.goenv/bin:/go/bin:$PATH"
-ENV GOENV_DISABLE_GOPATH=1
-ENV GOPATH="/go"
+# ##go
+# RUN git clone https://github.com/syndbg/goenv.git $HOME/.goenv
+# ENV PATH="/root/.goenv/shims:/root/.goenv/bin:/go/bin:$PATH"
+# ENV GOENV_DISABLE_GOPATH=1
+# ENV GOPATH="/go"
 
 #=======================End of layer: tools  =================
 
@@ -129,77 +129,77 @@ FROM tools AS runtimes_1
 
 #****************      JAVA     ****************************************************
 
-ENV JAVA_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
-    JDK_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
-    JRE_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
-    ANT_VERSION=1.10.13 \
-    MAVEN_HOME="/opt/maven" \
-    MAVEN_VERSION=3.9.2 \
-    GRADLE_VERSION=8.1.1 \
-    SBT_VERSION=1.8.3 \
-    GRADLE_PATH="$SRC_DIR/gradle" \
-    ANT_DOWNLOAD_SHA512="de4ac604629e39a86a306f0541adb3775596909ad92feb8b7de759b1b286417db24f557228737c8b902d6abf722d2ce5bb0c3baa3640cbeec3481e15ab1958c9" \
-    MAVEN_DOWNLOAD_SHA512="900bdeeeae550d2d2b3920fe0e00e41b0069f32c019d566465015bdd1b3866395cbe016e22d95d25d51d3a5e614af2c83ec9b282d73309f644859bbad08b63db" \
-    GRADLE_DOWNLOADS_SHA256="5625a0ae20fe000d9225d000b36909c7a0e0e8dda61c19b12da769add847c975 8.1.1" \
-    SBT_DOWNLOAD_SHA256="21F4210786FD68FD15DCA3F4C8EE9CAE0DB249C54E1B0EF6E829E9FA4936423A"
+# ENV JAVA_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
+#     JDK_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
+#     JRE_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
+#     ANT_VERSION=1.10.13 \
+#     MAVEN_HOME="/opt/maven" \
+#     MAVEN_VERSION=3.9.2 \
+#     GRADLE_VERSION=8.1.1 \
+#     SBT_VERSION=1.8.3 \
+#     GRADLE_PATH="$SRC_DIR/gradle" \
+#     ANT_DOWNLOAD_SHA512="de4ac604629e39a86a306f0541adb3775596909ad92feb8b7de759b1b286417db24f557228737c8b902d6abf722d2ce5bb0c3baa3640cbeec3481e15ab1958c9" \
+#     MAVEN_DOWNLOAD_SHA512="900bdeeeae550d2d2b3920fe0e00e41b0069f32c019d566465015bdd1b3866395cbe016e22d95d25d51d3a5e614af2c83ec9b282d73309f644859bbad08b63db" \
+#     GRADLE_DOWNLOADS_SHA256="5625a0ae20fe000d9225d000b36909c7a0e0e8dda61c19b12da769add847c975 8.1.1" \
+#     SBT_DOWNLOAD_SHA256="21F4210786FD68FD15DCA3F4C8EE9CAE0DB249C54E1B0EF6E829E9FA4936423A"
 
-ARG MAVEN_CONFIG_HOME="/root/.m2"
-ENV JAVA_HOME="$JAVA_17_HOME" \
-    JDK_HOME="$JDK_17_HOME" \
-    JRE_HOME="$JRE_17_HOME"
+# ARG MAVEN_CONFIG_HOME="/root/.m2"
+# ENV JAVA_HOME="$JAVA_17_HOME" \
+#     JDK_HOME="$JDK_17_HOME" \
+#     JRE_HOME="$JRE_17_HOME"
 
-RUN set -x \
-    # Install Amazon Corretto 17
-    && rpm --import https://yum.corretto.aws/corretto.key \
-    && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
-    && yum install -y -q java-17-amazon-corretto java-17-amazon-corretto-devel \
-    && update-ca-trust \
-    && for tool_path in $JAVA_HOME/bin/*; do \
-          tool=`basename $tool_path`; \
-          update-alternatives --install /usr/bin/$tool $tool $tool_path 10000; \
-          update-alternatives --set $tool $tool_path; \
-        done \
-    && rm $JAVA_HOME/lib/security/cacerts && ln -s /etc/pki/java/cacerts $JAVA_HOME/lib/security/cacerts \
-    # Install Ant
-    && curl -LSso /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz  \
-    && echo "$ANT_DOWNLOAD_SHA512 /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz" | sha512sum -c - \
-    && tar -xzf /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz -C /opt \
-    && rm /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz \
-    && update-alternatives --install /usr/bin/ant ant /opt/apache-ant-$ANT_VERSION/bin/ant 10000
+# RUN set -x \
+#     # Install Amazon Corretto 17
+#     && rpm --import https://yum.corretto.aws/corretto.key \
+#     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
+#     && yum install -y -q java-17-amazon-corretto java-17-amazon-corretto-devel \
+#     && update-ca-trust \
+#     && for tool_path in $JAVA_HOME/bin/*; do \
+#           tool=`basename $tool_path`; \
+#           update-alternatives --install /usr/bin/$tool $tool $tool_path 10000; \
+#           update-alternatives --set $tool $tool_path; \
+#         done \
+#     && rm $JAVA_HOME/lib/security/cacerts && ln -s /etc/pki/java/cacerts $JAVA_HOME/lib/security/cacerts \
+#     # Install Ant
+#     && curl -LSso /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz  \
+#     && echo "$ANT_DOWNLOAD_SHA512 /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz" | sha512sum -c - \
+#     && tar -xzf /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz -C /opt \
+#     && rm /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz \
+#     && update-alternatives --install /usr/bin/ant ant /opt/apache-ant-$ANT_VERSION/bin/ant 10000
 
-RUN set -ex \
-    # Install Maven
-    && mkdir -p $MAVEN_HOME \
-    && curl -LSso /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
-    && echo "$MAVEN_DOWNLOAD_SHA512 /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz" | sha512sum -c - \
-    && tar xzf /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz -C $MAVEN_HOME --strip-components=1 \
-    && rm /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz \
-    && update-alternatives --install /usr/bin/mvn mvn /opt/maven/bin/mvn 10000 \
-    && mkdir -p $MAVEN_CONFIG_HOME \
-    # Install Gradle
-    && mkdir -p $GRADLE_PATH \
-    && wget -q "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-all.zip" -O "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" \
-    && unzip -q "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" -d /usr/local \
-    && echo -e "$GRADLE_DOWNLOADS_SHA256" | grep "$GRADLE_VERSION" | sed "s|$GRADLE_VERSION|$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip|" | sha256sum -c - \
-    && rm "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" \
-    && mkdir "/tmp/gradle-$GRADLE_VERSION" \
-    && "/usr/local/gradle-$GRADLE_VERSION/bin/gradle" -p "/tmp/gradle-$GRADLE_VERSION" init \
-    && "/usr/local/gradle-$GRADLE_VERSION/bin/gradle" -p "/tmp/gradle-$GRADLE_VERSION" wrapper \
-    # Android Studio uses the "-all" distribution for it's wrapper script.
-    && perl -pi -e "s/gradle-$GRADLE_VERSION-bin.zip/gradle-$GRADLE_VERSION-all.zip/" "/tmp/gradle-$GRADLE_VERSION/gradle/wrapper/gradle-wrapper.properties" \
-    && "/tmp/gradle-$GRADLE_VERSION/gradlew" -p "/tmp/gradle-$GRADLE_VERSION" init \
-    && rm -rf "/tmp/gradle-$GRADLE_VERSION" \
-    # Install default GRADLE_VERSION to path
-    && ln -s /usr/local/gradle-$GRADLE_VERSION/bin/gradle /usr/bin/gradle \
-    && rm -rf $GRADLE_PATH \
-    # Install SBT
-    && curl -fSL "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" -o sbt.tgz \
-    && echo "${SBT_DOWNLOAD_SHA256} *sbt.tgz" | sha256sum -c - \
-    && tar xzf sbt.tgz -C /usr/local/bin/ \
-    && rm sbt.tgz
+# RUN set -ex \
+#     # Install Maven
+#     && mkdir -p $MAVEN_HOME \
+#     && curl -LSso /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
+#     && echo "$MAVEN_DOWNLOAD_SHA512 /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz" | sha512sum -c - \
+#     && tar xzf /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz -C $MAVEN_HOME --strip-components=1 \
+#     && rm /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz \
+#     && update-alternatives --install /usr/bin/mvn mvn /opt/maven/bin/mvn 10000 \
+#     && mkdir -p $MAVEN_CONFIG_HOME \
+#     # Install Gradle
+#     && mkdir -p $GRADLE_PATH \
+#     && wget -q "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-all.zip" -O "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" \
+#     && unzip -q "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" -d /usr/local \
+#     && echo -e "$GRADLE_DOWNLOADS_SHA256" | grep "$GRADLE_VERSION" | sed "s|$GRADLE_VERSION|$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip|" | sha256sum -c - \
+#     && rm "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" \
+#     && mkdir "/tmp/gradle-$GRADLE_VERSION" \
+#     && "/usr/local/gradle-$GRADLE_VERSION/bin/gradle" -p "/tmp/gradle-$GRADLE_VERSION" init \
+#     && "/usr/local/gradle-$GRADLE_VERSION/bin/gradle" -p "/tmp/gradle-$GRADLE_VERSION" wrapper \
+#     # Android Studio uses the "-all" distribution for it's wrapper script.
+#     && perl -pi -e "s/gradle-$GRADLE_VERSION-bin.zip/gradle-$GRADLE_VERSION-all.zip/" "/tmp/gradle-$GRADLE_VERSION/gradle/wrapper/gradle-wrapper.properties" \
+#     && "/tmp/gradle-$GRADLE_VERSION/gradlew" -p "/tmp/gradle-$GRADLE_VERSION" init \
+#     && rm -rf "/tmp/gradle-$GRADLE_VERSION" \
+#     # Install default GRADLE_VERSION to path
+#     && ln -s /usr/local/gradle-$GRADLE_VERSION/bin/gradle /usr/bin/gradle \
+#     && rm -rf $GRADLE_PATH \
+#     # Install SBT
+#     && curl -fSL "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" -o sbt.tgz \
+#     && echo "${SBT_DOWNLOAD_SHA256} *sbt.tgz" | sha256sum -c - \
+#     && tar xzf sbt.tgz -C /usr/local/bin/ \
+#     && rm sbt.tgz
 
-ENV PATH "/usr/local/bin/sbt/bin:$PATH"
-RUN sbt version -Dsbt.rootdir=true
+# ENV PATH "/usr/local/bin/sbt/bin:$PATH"
+# RUN sbt version -Dsbt.rootdir=true
 # Cleanup
 RUN rm -fr /tmp/* /var/tmp/*
 #****************     END JAVA     ****************************************************
@@ -209,17 +209,17 @@ RUN rm -fr /tmp/* /var/tmp/*
 
 # Install Powershell Core
 # See instructions at https://docs.microsoft.com/en-us/powershell/scripting/setup/installing-powershell-core-on-linux
-ENV POWERSHELL_VERSION 7.3.4
-ENV POWERSHELL_DOWNLOAD_URL https://github.com/PowerShell/PowerShell/releases/download/v$POWERSHELL_VERSION/powershell-$POWERSHELL_VERSION-linux-x64.tar.gz
-ENV POWERSHELL_DOWNLOAD_SHA E85D5544E13A924F8B2C4A5DC2D43ABE46E46633F89E8D138D39C0AAEACB9976
+# ENV POWERSHELL_VERSION 7.3.4
+# ENV POWERSHELL_DOWNLOAD_URL https://github.com/PowerShell/PowerShell/releases/download/v$POWERSHELL_VERSION/powershell-$POWERSHELL_VERSION-linux-x64.tar.gz
+# ENV POWERSHELL_DOWNLOAD_SHA E85D5544E13A924F8B2C4A5DC2D43ABE46E46633F89E8D138D39C0AAEACB9976
 
-RUN set -ex \
-    && curl -SL $POWERSHELL_DOWNLOAD_URL --output powershell.tar.gz \
-    && echo "$POWERSHELL_DOWNLOAD_SHA powershell.tar.gz" | sha256sum -c - \
-    && mkdir -p /opt/microsoft/powershell/$POWERSHELL_VERSION \
-    && tar zxf powershell.tar.gz -C /opt/microsoft/powershell/$POWERSHELL_VERSION \
-    && rm powershell.tar.gz \
-    && ln -s /opt/microsoft/powershell/$POWERSHELL_VERSION/pwsh /usr/bin/pwsh
+# RUN set -ex \
+#     && curl -SL $POWERSHELL_DOWNLOAD_URL --output powershell.tar.gz \
+#     && echo "$POWERSHELL_DOWNLOAD_SHA powershell.tar.gz" | sha256sum -c - \
+#     && mkdir -p /opt/microsoft/powershell/$POWERSHELL_VERSION \
+#     && tar zxf powershell.tar.gz -C /opt/microsoft/powershell/$POWERSHELL_VERSION \
+#     && rm powershell.tar.gz \
+#     && ln -s /opt/microsoft/powershell/$POWERSHELL_VERSION/pwsh /usr/bin/pwsh
 
 # Install AWS CLI v2
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
@@ -231,13 +231,13 @@ RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscli
     && aws --version
 
 #DotNet 6.0
-ENV DOTNET_60_SDK_VERSION="6.0.410"
-ENV DOTNET_ROOT="/root/.dotnet"
+# ENV DOTNET_60_SDK_VERSION="6.0.410"
+# ENV DOTNET_ROOT="/root/.dotnet"
 
 # Add .NET Core 6.0 Global Tools install folder to PATH
-RUN /usr/local/bin/dotnet-install.sh -v $DOTNET_60_SDK_VERSION \
-    && dotnet --list-sdks \
-    && rm -rf /tmp/*
+# RUN /usr/local/bin/dotnet-install.sh -v $DOTNET_60_SDK_VERSION \
+#     && dotnet --list-sdks \
+#     && rm -rf /tmp/*
 
 ## Trigger the population of the local package cache
 ENV NUGET_XMLDOC_MODE skip
@@ -253,15 +253,15 @@ RUN set -ex \
 
 #****************      NODEJS     ****************************************************
 
-ENV NODE_18_VERSION="18.16.0"
+# ENV NODE_18_VERSION="18.16.0"
 
-RUN  n $NODE_18_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
-     && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
-     && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
-     && yum install -y https://dl.fedoraproject.org/pub/epel/8/Modular/x86_64/Packages/l/libuv-1.43.0-2.module_el8+13804+34326f90.x86_64.rpm \
-     && yum install -y -q yarn \
-     && yarn --version \
-     && cd / && rm -rf $N_SRC_DIR && rm -rf /tmp/*
+# RUN  n $NODE_18_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
+#      && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
+#      && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
+#      && yum install -y https://dl.fedoraproject.org/pub/epel/8/Modular/x86_64/Packages/l/libuv-1.43.0-2.module_el8+13804+34326f90.x86_64.rpm \
+#      && yum install -y -q yarn \
+#      && yarn --version \
+#      && cd / && rm -rf $N_SRC_DIR && rm -rf /tmp/*
 
 #****************      END NODEJS     ****************************************************
 
@@ -277,43 +277,43 @@ RUN rbenv install $RUBY_32_VERSION && rm -rf /tmp/* && rbenv global $RUBY_32_VER
 
 #**************** PYTHON *****************************************************
 #Python 3.11
-ENV PYTHON_311_VERSION="3.11.4"
-ENV PYTHON_PIP_VERSION=23.1.2
-ENV PYYAML_VERSION=5.4.1
+# ENV PYTHON_311_VERSION="3.11.4"
+# ENV PYTHON_PIP_VERSION=23.1.2
+# ENV PYYAML_VERSION=5.4.1
 
-COPY tools/runtime_configs/python/$PYTHON_311_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_311_VERSION
-RUN   env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_311_VERSION && rm -rf /tmp/*
-RUN   pyenv global  $PYTHON_311_VERSION
-RUN set -ex \
-    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
-    && pip3 install wheel \
-    && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
-    && pip3 install --no-cache-dir --upgrade 'setuptools==67.7.2' aws-sam-cli boto3 pipenv virtualenv \
-    && pip3 uninstall cython --yes
+# COPY tools/runtime_configs/python/$PYTHON_311_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_311_VERSION
+# RUN   env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_311_VERSION && rm -rf /tmp/*
+# RUN   pyenv global  $PYTHON_311_VERSION
+# RUN set -ex \
+#     && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+#     && pip3 install wheel \
+#     && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
+#     && pip3 install --no-cache-dir --upgrade 'setuptools==67.7.2' aws-sam-cli boto3 pipenv virtualenv \
+#     && pip3 uninstall cython --yes
 
 #**************** END PYTHON *****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_82_VERSION="8.2.7"
+# ENV PHP_82_VERSION="8.2.7"
 
-COPY tools/runtime_configs/php/$PHP_82_VERSION /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_82_VERSION
-RUN phpenv install $PHP_82_VERSION && rm -rf /tmp/* && phpenv global $PHP_82_VERSION
-RUN echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_82_VERSION/etc/conf.d/memory.ini"
+# COPY tools/runtime_configs/php/$PHP_82_VERSION /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_82_VERSION
+# RUN phpenv install $PHP_82_VERSION && rm -rf /tmp/* && phpenv global $PHP_82_VERSION
+# RUN echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_82_VERSION/etc/conf.d/memory.ini"
 
-# Install Composer globally
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+# # Install Composer globally
+# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 #****************      END PHP     ****************************************************
 
 #****************     GOLANG     ****************************************************
-ENV GOLANG_20_VERSION="1.20.5"
-ENV GOENV_DISABLE_GOPATH=1
-ENV GOPATH="/go"
+# ENV GOLANG_20_VERSION="1.20.5"
+# ENV GOENV_DISABLE_GOPATH=1
+# ENV GOPATH="/go"
 
-RUN goenv install $GOLANG_20_VERSION && rm -rf /tmp/* && \
-    goenv global $GOLANG_20_VERSION && \
-    go env -w GO111MODULE=auto
+# RUN goenv install $GOLANG_20_VERSION && rm -rf /tmp/* && \
+#     goenv global $GOLANG_20_VERSION && \
+#     go env -w GO111MODULE=auto
 
-RUN go get -u github.com/golang/dep/cmd/dep
+# RUN go get -u github.com/golang/dep/cmd/dep
 #****************      END GOLANG     ****************************************************
 
 #=======================End of layer: runtimes_1  =================
