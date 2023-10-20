@@ -240,14 +240,14 @@ RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscli
 #     && rm -rf /tmp/*
 
 ## Trigger the population of the local package cache
-ENV NUGET_XMLDOC_MODE skip
-RUN set -ex \
-    && mkdir warmup \
-    && cd warmup \
-    && dotnet new \
-    && cd .. \
-    && rm -rf warmup \
-    && rm -rf /tmp/NuGetScratch
+# ENV NUGET_XMLDOC_MODE skip
+# RUN set -ex \
+#     && mkdir warmup \
+#     && cd warmup \
+#     && dotnet new \
+#     && cd .. \
+#     && rm -rf warmup \
+#     && rm -rf /tmp/NuGetScratch
 #****************     END Powershell     *******************************************************
 
 
