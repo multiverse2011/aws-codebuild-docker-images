@@ -267,11 +267,13 @@ RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscli
 
 #**************** RUBY *********************************************************
 
+ENV RUBY_27_VERSION="2.7.8"
 ENV RUBY_30_VERSION="3.0.6"
-ENV RUBY_32_VERSION="3.2.2"
+ENV RUBY_33_VERSION="3.3.0-preview2"
 
+RUN rbenv install $RUBY_27_VERSION && rm -rf /tmp/* && rbenv global $RUBY_27_VERSION && ruby -v
 RUN rbenv install $RUBY_30_VERSION && rm -rf /tmp/* && rbenv global $RUBY_30_VERSION && ruby -v
-RUN rbenv install $RUBY_32_VERSION && rm -rf /tmp/* && rbenv global $RUBY_32_VERSION && ruby -v
+RUN rbenv install $RUBY_33_VERSION && rm -rf /tmp/* && rbenv global $RUBY_33_VERSION && ruby -v
 
 #**************** END RUBY *****************************************************
 

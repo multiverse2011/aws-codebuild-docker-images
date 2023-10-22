@@ -3,11 +3,15 @@ version: 0.1
 runtimes:
   ruby:
     versions:
-      3.2:
+      2.7:
         commands:
-          - echo "Installing Ruby version 3.2 ..."
-          - rbenv global $RUBY_32_VERSION
+          - echo "Installing Ruby version 2.7 ..."
+          - rbenv global $RUBY_27_VERSION
       3.0:
         commands:
           - echo "Installing Ruby version 3.0 ..."
           - rbenv global $RUBY_30_VERSION
+      3.3:
+        commands:
+          - echo "Installing Ruby version 3.3 ..."
+          - rbenv global $RUBY_333_VERSION
